@@ -1,0 +1,116 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.header {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    padding: 5px;
+    gap: 20px;
+    border: 2px solid orange;
+    width: 500px;
+    border-radius: 10px;
+    /* overflow: hidden; */
+}
+
+.header a {
+    text-decoration: none;
+
+}
+
+.header a:hover {
+    padding: 0px 5px;
+    border-radius: 5px;
+    background-color: orange;
+    transition: all ease 0.3s;
+}
+
+#tempo-msg {
+    display: none;
+}
+
+.system-section {
+    margin-top: 2rem;
+}
+
+#filter-field {
+    text-align: center;
+    padding: .2rem 1rem;
+    width: 400px;
+}
+
+#filter-field:focus {
+    background-color: rgba(174, 174, 200, 0.614);
+    /* border: 1px solid orange; */
+    border: none;
+}
+
+.recipe-package {
+    margin-top: 2rem;
+    height: auto;
+    width: 500px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+    gap: 1rem;
+}
+
+
+.recipe-container {
+    text-align: left;
+    width: 200px;
+    background-color: rgba(255, 166, 0, 0.533);
+    border: 1px solid purple;
+    border-radius: 10px;
+}
+
+.recipe-img {
+    background-color: rgba(184, 161, 117, 0.682);
+    position: relative;
+    background-image: url(./assests/Cajun-sausage.png);
+    width: 200px;
+    height: 250px;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.recipe-img span {
+    position: absolute;
+    right: 0;
+    bottom: 5%;
+    background: linear-gradient(rgba(255, 166, 0, 0.759), rgba(128, 0, 128, 0.699));
+    padding: 5px;
+    color: #ddd;
+    border: 2px solid transparent;
+    border-radius: 8px;
+
+}
+
+.recipe-container h3,
+p {
+    max-width: 100%;
+    text-align: center;
+}
+
+.recipe-container h3 {
+
+    text-transform: uppercase;
+    color: #333;
+}
+
+.recipe-container h3>span {
+    font-size: 30px;
+    color: rgba(128, 0, 128, 0.8);
+}
