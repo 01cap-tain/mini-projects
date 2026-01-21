@@ -8,6 +8,7 @@ function handleRecipeList() {
       image: "",
       name: "Cajun-sausage",
       price: 20,
+      // id: 1,
       ingredient: [
         "Smoked sausage",
         "Rice",
@@ -24,6 +25,7 @@ function handleRecipeList() {
       image: "Kenny",
       name: "Taco",
       price: 50,
+      // id: 2,
       ingredient: [
         "Smoked sausage",
         "Rice",
@@ -40,6 +42,7 @@ function handleRecipeList() {
       image: "",
       name: "Cajun-sausage",
       price: 50,
+      // id: 3,
       ingredient: [
         "Smoked sausage",
         "Rice",
@@ -56,6 +59,7 @@ function handleRecipeList() {
       image: "",
       name: "Cajun-sausage",
       price: 50,
+      // id: 4,
       ingredient: [
         "Smoked sausage",
         "Rice",
@@ -72,6 +76,7 @@ function handleRecipeList() {
       image: "",
       name: "Cajun-sausage",
       price: 70,
+      // id: 5,
       ingredient: [
         "Smoked sausage",
         "Rice",
@@ -122,29 +127,62 @@ function handleRecipeList() {
     }
 
     RecipePackage.innerHTML = filterResult.join(" ");
-    // if (filterResult) {
-    //   RecipePackage.innerHTML = filterResult.join(" ");
-    // }
+
     console.log(filterResult);
   });
-
-  const modal = document.createElement("div");
-  modal.className = "modal";
-  Receipes.forEach((recipe) => {
-    if (recipe) {
-      document.querySelector("#item").addEventListener("click", () => {
-        modal.innerHTML = `<div>
-     <img class="" src="./assests/Cajun-sausage.png" alt="theme-Icon">
-     <h3>price:<span>$${recipe.price}</span></h3>
-    <p>${recipe.ingredient}</p>
-    <input id="modal-checkbox" type="checkbox">
-    <button>Purchase</button>
-   </div>`;
-        RecipeList.style.opacity = "0.5";
-        console.log(modal.innerHTML);
-      });
-    }
+  // result.addEventListener("click", (e) => {
+  //   if (e.target) {
+  //     openModal;
+  //   }
+  // item});
+  const items = RecipePackage.querySelectorAll("#item");
+  items.forEach((item, index) => {
+    item.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const selectedRecipe = Receipes[index];
+      // selectedRecipe.();
+      const modal = document.querySelector(".modal");
+      console.log(modal);
+      if (modal) {
+        modal.remove();
+      }
+      openModal(selectedRecipe);
+    });
   });
 }
 
 window.addEventListener("DOMContentLoaded", handleRecipeList);
+
+function openModal(recipe) {
+  const modal = document.createElement("div");
+  modal.className = "modal"; // Style this in CSS to be fixed/centered
+
+  modal.innerHTML = `
+        <div class="modal-content" id="${recipe.id}">
+            <span class="close-btn">&times;</span>
+            <img src="./assests/Cajun-sausage.png" alt="${recipe.name}">
+            <h2>${recipe.name}</h2>
+            <h3>Price:<span>$${recipe.price}</span></h3>
+            <p><strong>Ingredients:</strong> ${recipe.ingredient}</p>
+            <input id="checkbox" type="checkbox">
+            <button class="purchase">Purchase Now</button>
+        </div>
+    `;
+  document.body.appendChild(modal);
+  document.getElementById("recipe-list").style.opacity = "0.5";
+
+  // Close functionality
+  // Inside your openModal function
+  const purchaseBtn = modal.querySelector(".purchase");
+  const confirmCheck = modal.querySelector("#checkbox");
+  console.log(confirmCheck);
+  console.log(confirmCheck.checked);
+
+  confirmCheck.addEventListener("change", () => {
+    purchaseBtn.disabled = !confirmCheck.checked;
+  });
+  modal.querySelector(".close-btn").addEventListener("click", () => {
+    modal.remove();
+    document.getElementById("recipe-list").style.opacity = "1";
+  });
+}
