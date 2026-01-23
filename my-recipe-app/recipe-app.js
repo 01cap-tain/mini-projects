@@ -216,7 +216,9 @@ function handleRecipeList() {
       modal.remove();
     }
     if ((target.id = "item")) {
-      openModal(target);
+      const recipeName = target.querySelector(".recipe-name").textContent;
+      const findCard = Receipes.find((recipe) => recipe.name === recipeName);
+      openModal(findCard);
     }
   });
 }
@@ -227,7 +229,7 @@ function Template(recipe) {
   return `
           <div id="item" class="recipe-container">
                       <div class="recipe-img">
-                          <span>${recipe.name}</span>
+                          <span class="recipe-name">${recipe.name}</span>
                       </div>
                       <h3>price:<span>$${recipe.price}</span></h3>
                       <p>${recipe.ingredient.slice(0, 5)}....</p>
@@ -237,7 +239,7 @@ function Template(recipe) {
 
 function openModal(recipe) {
   const modal = document.createElement("div");
-  modal.className = "modal"; // Style this in CSS to be fixed/centered
+  modal.className = "modal";
 
   modal.innerHTML = `
         <div class="modal-content" id="${recipe.id}">
