@@ -2,6 +2,7 @@ const itemForm = document.querySelector("#item-form");
 const itemInput = document.querySelector("#item-input");
 const itemList = document.querySelector("#item-list");
 const clearBtn = document.querySelector("#clear");
+const filter = document.querySelector("#filter");
 function addItem(e) {
   e.preventDefault();
   // create new Item
@@ -17,7 +18,9 @@ function addItem(e) {
   const btn = createBtn("remove-item btn-link text-red");
   li.appendChild(btn);
   itemList.appendChild(li);
+
   itemInput.value = "";
+  updateUi();
 }
 
 function createBtn(classes) {
@@ -44,8 +47,38 @@ function clearItems() {
   while (itemList.firstChild) {
     itemList.removeChild(itemList.firstChild);
   }
+  updateUi();
+}
+function updateUi() {
+  const items = itemList.querySelectorAll("li");
+  if (items.length === 0) {
+    clearBtn.style.display = "none";
+    filter.style.display = "none";
+  } else {
+    clearBtn.style.display = "block";
+    filter.style.display = "block";
+  }
+}
+function filterList(e) {
+  const newValue = document.querySelector("#filter").value;
+  const items = document.querySelectorAll("li");
+  if (items !== 0) {
+    // items.filter((item) => console.log(item));
+    items.forEach((item) => {
+      console.log(item);
+      const text = e.target.value.trim().toLowerCase();
+      const itemName = item.firstChild.textContent.toLowerCase();
+      if (itemName.inc(text) !== -1) {
+        item.style.display = "flex";
+      } else {
+        item.style.display = "none";
+      }
+    });
+  }
 }
 
 itemForm.addEventListener("submit", addItem);
 itemList.addEventListener("click", removeItem);
 clearBtn.addEventListener("click", clearItems);
+filter.addEventListener("input", filterList);
+updateUi();
