@@ -192,16 +192,17 @@ function handleRecipeList() {
     });
   });
   let filterResult;
-  input.addEventListener("input", () => {
+  input.addEventListener("input", (e) => {
     if (
-      input.value.trim().toLowerCase() === "" ||
-      !input.value.trim().toLowerCase()
+      e.target.value.trim().toLowerCase() === "" ||
+      !e.target.value.trim().toLowerCase()
     ) {
       return (RecipePackage.innerHTML = result.join(" "));
     } else {
       filterResult = Receipes.filter(
         (recipe) =>
-          recipe.name.toLocaleLowerCase() === input.value.trim().toLowerCase(),
+          recipe.name.toLocaleLowerCase() ===
+          e.target.value.trim().toLowerCase(),
       ).map(Template);
     }
 
