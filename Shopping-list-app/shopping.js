@@ -3,7 +3,7 @@ const itemInput = document.querySelector("#item-input");
 const itemList = document.querySelector("#item-list");
 const clearBtn = document.querySelector("#clear");
 const filter = document.querySelector("#filter");
-function addItem(e) {
+function toAddAndSubmit(e) {
   e.preventDefault();
   // create new Item
   const newItem = itemInput.value;
@@ -11,16 +11,33 @@ function addItem(e) {
     alert("pls enter the field");
     return;
   }
+  addItem(newItem);
+  addItemtoStorage(newItem);
+  updateUi();
+  itemInput.value = "";
+}
+
+function addItem(item) {
   const li = document.createElement("li");
-  let text = document.createTextNode(newItem);
+  let text = document.createTextNode(item);
   li.appendChild(text);
 
   const btn = createBtn("remove-item btn-link text-red");
   li.appendChild(btn);
   itemList.appendChild(li);
+}
 
-  itemInput.value = "";
-  updateUi();
+function addItemtoStorage(item) {
+  let itemStorage;
+  if (localStorage.getItem("items") === null) {
+    itemStorage = [];
+  } else {
+    itemStorage = JSON.parse(localStorage.getItem("items"));
+  }
+  itemStorage.push(item);
+
+  localStorage.setItem("items", JSON.stringify(itemStorage));
+  //   console.log(...localStorage);
 }
 
 function createBtn(classes) {
@@ -68,7 +85,7 @@ function filterList(e) {
       console.log(item);
       const text = e.target.value.trim().toLowerCase();
       const itemName = item.firstChild.textContent.toLowerCase();
-      if (itemName.inc(text) !== -1) {
+      if (itemName.indexOf(text) !== -1) {
         item.style.display = "flex";
       } else {
         item.style.display = "none";
@@ -77,7 +94,7 @@ function filterList(e) {
   }
 }
 
-itemForm.addEventListener("submit", addItem);
+itemForm.addEventListener("submit", toAddAndSubmit);
 itemList.addEventListener("click", removeItem);
 clearBtn.addEventListener("click", clearItems);
 filter.addEventListener("input", filterList);
