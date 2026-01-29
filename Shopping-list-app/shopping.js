@@ -17,6 +17,11 @@ function toAddAndSubmit(e) {
   itemInput.value = "";
 }
 
+function displayItems() {
+  const itemsFromStorage = getItemFromStorage();
+  itemsFromStorage.forEach((item) => addItem(item));
+  updateUi();
+}
 function addItem(item) {
   const li = document.createElement("li");
   let text = document.createTextNode(item);
@@ -28,18 +33,22 @@ function addItem(item) {
 }
 
 function addItemtoStorage(item) {
-  let itemStorage;
-  if (localStorage.getItem("items") === null) {
-    itemStorage = [];
-  } else {
-    itemStorage = JSON.parse(localStorage.getItem("items"));
-  }
+  const itemStorage = getItemFromStorage();
   itemStorage.push(item);
 
   localStorage.setItem("items", JSON.stringify(itemStorage));
   //   console.log(...localStorage);
 }
 
+function getItemFromStorage() {
+  let itemStorage;
+  if (localStorage.getItem("items") === null) {
+    itemStorage = [];
+  } else {
+    itemStorage = JSON.parse(localStorage.getItem("items"));
+  }
+  return itemStorage;
+}
 function createBtn(classes) {
   const btn = document.createElement("button");
   btn.className = classes;
@@ -94,8 +103,12 @@ function filterList(e) {
   }
 }
 
-itemForm.addEventListener("submit", toAddAndSubmit);
-itemList.addEventListener("click", removeItem);
-clearBtn.addEventListener("click", clearItems);
-filter.addEventListener("input", filterList);
-updateUi();
+function init() {
+  itemForm.addEventListener("submit", toAddAndSubmit);
+  itemList.addEventListener("click", removeItem);
+  clearBtn.addEventListener("click", clearItems);
+  filter.addEventListener("input", filterList);
+  document.addEventListener("DOMContentLoaded", displayItems);
+  updateUi();
+}
+init();
