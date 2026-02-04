@@ -22,6 +22,7 @@ function displayItems() {
   itemsFromStorage.forEach((item) => addItem(item));
   updateUi();
 }
+
 function addItem(item) {
   const li = document.createElement("li");
   let text = document.createTextNode(item);
@@ -62,10 +63,27 @@ function createIcon(classes) {
   icon.className = classes;
   return icon;
 }
-function removeItem(e) {
+function removeOnDOMnStorage(e) {
   if (e.target.parentElement.classList.contains("remove-item")) {
-    e.target.parentElement.parentElement.remove();
+    removeItem(e.target.parentElement.parentElement);
   }
+}
+function removeItem(item) {
+  item.remove();
+
+  // removing item from storage
+  removeItemFromStorage(item.textContent);
+  console.log(item);
+  updateUi();
+}
+function removeItemFromStorage(item) {
+  let items = getItemFromStorage();
+
+  // filter out item to be remove
+  items = items.filter((i) => i !== item);
+
+  // reset to localstorage
+  localStorage.setItem("items", JSON.stringify(items));
 }
 
 function clearItems() {
@@ -73,6 +91,8 @@ function clearItems() {
   while (itemList.firstChild) {
     itemList.removeChild(itemList.firstChild);
   }
+  // clear from local storage
+  localStorage.removeItem("items");
   updateUi();
 }
 function updateUi() {
@@ -105,7 +125,7 @@ function filterList(e) {
 
 function init() {
   itemForm.addEventListener("submit", toAddAndSubmit);
-  itemList.addEventListener("click", removeItem);
+  itemList.addEventListener("click", removeOnDOMnStorage);
   clearBtn.addEventListener("click", clearItems);
   filter.addEventListener("input", filterList);
   document.addEventListener("DOMContentLoaded", displayItems);
