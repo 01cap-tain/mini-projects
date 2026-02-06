@@ -112,6 +112,10 @@ header h1 {
   flex-wrap: wrap;
 }
 
+.updateBackground {
+  background-color: #ccc;
+}
+
 .items li {
   display: flex;
   justify-content: space-between;

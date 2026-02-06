@@ -3,6 +3,8 @@ const itemInput = document.querySelector("#item-input");
 const itemList = document.querySelector("#item-list");
 const clearBtn = document.querySelector("#clear");
 const filter = document.querySelector("#filter");
+const formBtn = itemForm.querySelector("button");
+let EditMode = false;
 function toAddAndSubmit(e) {
   e.preventDefault();
   // create new Item
@@ -10,6 +12,18 @@ function toAddAndSubmit(e) {
   if (newItem === "") {
     alert("pls enter the field");
     return;
+  }
+  if (EditMode) {
+    let itemToEdit = itemList.querySelector(".updateBackground");
+    removeItemFromStorage(itemToEdit.textContent);
+    itemToEdit.classList.remove(".updateBackground");
+    itemToEdit.remove();
+    EditMode = false;
+  } else {
+    if (itemExit(newItem.toLowerCase().trim())) {
+      alert("Item already exit");
+      return;
+    }
   }
   addItem(newItem);
   addItemtoStorage(newItem);
@@ -41,6 +55,10 @@ function addItemtoStorage(item) {
   //   console.log(...localStorage);
 }
 
+function itemExit(item) {
+  let itemsFromStorage = getItemFromStorage();
+  return itemsFromStorage.includes(item.toLowerCase().trim());
+}
 function getItemFromStorage() {
   let itemStorage;
   if (localStorage.getItem("items") === null) {
@@ -63,18 +81,34 @@ function createIcon(classes) {
   icon.className = classes;
   return icon;
 }
-function removeOnDOMnStorage(e) {
+function onClick(e) {
   if (e.target.parentElement.classList.contains("remove-item")) {
     removeItem(e.target.parentElement.parentElement);
+  } else {
+    setEdit(e.target);
   }
 }
-function removeItem(item) {
-  item.remove();
+function setEdit(item) {
+  EditMode = true;
+  const items = document.querySelectorAll("li");
 
-  // removing item from storage
-  removeItemFromStorage(item.textContent);
-  console.log(item);
-  updateUi();
+  items.forEach((item) => {
+    item.classList.remove("updateBackground");
+  });
+  item.classList.add("updateBackground");
+  formBtn.innerHTML = `<i class="fa-solid fa-pen"></i> Update Item`;
+  formBtn.style.backgroundColor = "#228B22";
+  itemInput.value = item.textContent;
+}
+function removeItem(item) {
+  if (confirm("Are you sure?")) {
+    item.remove();
+
+    // removing item from storage
+    removeItemFromStorage(item.textContent);
+    console.log(item);
+    updateUi();
+  }
 }
 function removeItemFromStorage(item) {
   let items = getItemFromStorage();
@@ -87,15 +121,18 @@ function removeItemFromStorage(item) {
 }
 
 function clearItems() {
-  //   itemList.innerHTML = "";
-  while (itemList.firstChild) {
-    itemList.removeChild(itemList.firstChild);
+  if (confirm("Are you sure?")) {
+    //   itemList.innerHTML = "";
+    while (itemList.firstChild) {
+      itemList.removeChild(itemList.firstChild);
+    }
+    // clear from local storage
+    localStorage.removeItem("items");
+    updateUi();
   }
-  // clear from local storage
-  localStorage.removeItem("items");
-  updateUi();
 }
 function updateUi() {
+  itemInput.value = "";
   const items = itemList.querySelectorAll("li");
   if (items.length === 0) {
     clearBtn.style.display = "none";
@@ -104,6 +141,9 @@ function updateUi() {
     clearBtn.style.display = "block";
     filter.style.display = "block";
   }
+  formBtn.innerHTML = `<i class="fa-solid fa-plus"></i> Add Item`;
+  formBtn.style.backgroundColor = "#333";
+  EditMode = false;
 }
 function filterList(e) {
   const newValue = document.querySelector("#filter").value;
@@ -125,7 +165,7 @@ function filterList(e) {
 
 function init() {
   itemForm.addEventListener("submit", toAddAndSubmit);
-  itemList.addEventListener("click", removeOnDOMnStorage);
+  itemList.addEventListener("click", onClick);
   clearBtn.addEventListener("click", clearItems);
   filter.addEventListener("input", filterList);
   document.addEventListener("DOMContentLoaded", displayItems);
